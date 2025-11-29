@@ -1,155 +1,103 @@
-# loopin-all.yaml
-# -------------------------------
-# Namespace
-# -------------------------------
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: "2401193"
----
-# -------------------------------
-# Secret: MongoDB Atlas connection string
-# (create via kubectl, not stored in Git)
-# -------------------------------
-# Deployment expects:
-#   secret name: mongo-secret
-#   key: MONGO_URI
----
-# -------------------------------
-# PersistentVolumeClaim
-# -------------------------------
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: static-pvc
-  namespace: "2401193"
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
-# -------------------------------
-# Deployment using MongoDB Atlas
-# -------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loopin-deployment
+  name: mern-backend-deployment
   namespace: "2401193"
-  labels:
-    app: loopin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: loopin
+      app: mern-backend
   template:
     metadata:
       labels:
-        app: loopin
+        app: mern-backend
     spec:
       imagePullSecrets:
-        - name: nexus-secret   # must exist in this namespace
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
+        - name: nexus-secret
       containers:
-        - name: loopin
-          # <--- change this to your real Docker image
-          image: 127.0.0.1:30085/2401193-project/loopin:latest
-          imagePullPolicy: IfNotPresent
+        - name: backend
+          image: 127.0.0.1:30085/sanika-project/loopin-backend:latest
           ports:
-            - containerPort: 8000
-
+            - containerPort: 5000
           env:
-            - name: MONGO_URI
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_URI
-
-            - name: DEBUG
-              value: "0"
-
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8000
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            failureThreshold: 3
-
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8000
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            failureThreshold: 3
-
-          volumeMounts:
-            - name: static-media
-              mountPath: /app/static
-
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "512Mi"
-            limits:
-              cpu: "1"
-              memory: "1Gi"
-
-      volumes:
-        - name: static-media
-          persistentVolumeClaim:
-            claimName: static-pvc
+            - name: MONGO_URL
+              value: "mongodb+srv://sanikasurade1:PAkoQtwxDjvJy8La@cluster0.5eramok.mongodb.net/LOOPIN"
+            - name: NODE_ENV
+              value: "production"
 ---
-# -------------------------------
-# Service
-# -------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: loopin-service
+  name: mern-backend-service
   namespace: "2401193"
-  labels:
-    app: loopin
 spec:
-  selector:
-    app: loopin
-  ports:
-    - protocol: TCP
-      port: 8000
-      targetPort: 8000
   type: ClusterIP
+  selector:
+    app: mern-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
 ---
-# -------------------------------
-# Ingress
-# -------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mern-frontend-deployment
+  namespace: "2401193"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mern-frontend
+  template:
+    metadata:
+      labels:
+        app: mern-frontend
+    spec:
+      imagePullSecrets:
+        - name: nexus-secret
+      containers:
+        - name: frontend
+          image: 127.0.0.1:30085/sanika-project/loopin-frontend:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mern-frontend-service
+  namespace: "2401193"
+spec:
+  type: ClusterIP
+  selector:
+    app: mern-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: loopin-ingress
+  name: mern-ingress
   namespace: "2401193"
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
 spec:
-  ingressClassName: nginx
   rules:
-    - host: loopin.imcc.com   # <-- change to your real DNS
+    - host: loopin.imcc-projects.in
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: loopin-service
+                name: mern-frontend-service
                 port:
-                  number: 8000
-# TLS (optional)
-#  tls:
-#    - hosts:
-#        - loopin.imcc.com
-#      secretName: loopin-tls
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: mern-backend-service
+                port:
+                  number: 5000
