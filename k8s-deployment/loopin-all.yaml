@@ -19,10 +19,20 @@ spec:
         - name: backend
           image: 127.0.0.1:30085/sanika-project/loopin-backend:latest
           ports:
-            - containerPort: 5000
+            - containerPort: 5002
           env:
-            - name: MONGO_URL
-              value: "mongodb+srv://sanikasurade1:PAkoQtwxDjvJy8La@cluster0.5eramok.mongodb.net/LOOPIN"
+            - name: PORT
+              value: "5002"
+            - name: MONGODB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: MONGODB_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET
             - name: NODE_ENV
               value: "production"
 ---
@@ -36,8 +46,8 @@ spec:
   selector:
     app: mern-backend
   ports:
-    - port: 5000
-      targetPort: 5000
+    - port: 5002
+      targetPort: 5002
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -100,4 +110,4 @@ spec:
               service:
                 name: mern-backend-service
                 port:
-                  number: 5000
+                  number: 5002
