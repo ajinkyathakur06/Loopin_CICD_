@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
@@ -61,7 +61,7 @@ function App() {
   }, [userData]);
 
   return (
-    <BrowserRouter>
+
       <Routes>
         <Route path="/signup" element={!userData ? <SignUp /> : <Navigate to="/" />} />
         <Route path="/signin" element={!userData ? <SignIn /> : <Navigate to="/" />} />
@@ -74,7 +74,7 @@ function App() {
         <Route path="/messages" element={userData ? <Messages /> : <Navigate to="/signin" />} />
         <Route path="/messageArea" element={userData ? <MessageArea /> : <Navigate to="/signin" />} />
       </Routes>
-    </BrowserRouter>
+
   );
 }
 
