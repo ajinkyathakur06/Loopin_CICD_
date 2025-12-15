@@ -91,6 +91,8 @@ kind: Ingress
 metadata:
   name: mern-ingress
   namespace: "2401193"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
   
     
 spec:
