@@ -20,7 +20,7 @@ import getFollowingList from "./hooks/getFollowingList.jsx";
 import getPrevChatUsers from "./hooks/getPrevchatUsers.jsx";
 
 
-export const serverUrl="https://loopin.imcc-projects.in/api"
+export const serverUrl="https://loopin.imcc-projects.in"
 function App() {
   getCurrentUser();
   getSuggestedUsers();
