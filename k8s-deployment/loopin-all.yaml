@@ -92,16 +92,14 @@ metadata:
   name: mern-ingress
   namespace: "2401193"
   annotations:
+    kubernetes.io/ingress.class: rke2-nginx
     nginx.ingress.kubernetes.io/rewrite-target: /
-  
-    
 spec:
-  ingressClassName: nginx
+  ingressClassName: rke2-nginx
   rules:
     - host: loopin.imcc.com
       http:
         paths:
-          # 🔹 BACKEND ROUTE (FIRST)
           - path: /api
             pathType: Prefix
             backend:
@@ -109,8 +107,6 @@ spec:
                 name: mern-backend-service
                 port:
                   number: 5002
-
-          # 🔹 FRONTEND ROUTE (SECOND)
           - path: /
             pathType: Prefix
             backend:
