@@ -13,14 +13,14 @@ import Upload from "./pages/Upload.jsx";
 import getAllPost from "./hooks/getAllPost.jsx";
 import Messages from "./pages/Messages.jsx";
 import MessageArea from "./pages/MessageArea.jsx";
-import { useEffect } from "react";
+import React,{ useEffect } from "react";
 import {io} from "socket.io-client"
 import { setOnlineUsers, setSocket } from "./redux/socketSlice.js";
 import getFollowingList from "./hooks/getFollowingList.jsx";
 import getPrevChatUsers from "./hooks/getPrevchatUsers.jsx";
+import { BrowserRouter,Navigate,Route,Routes } from "react-router-dom";
 
-
-export const serverUrl="https://loopin.imcc.com"
+export const serverUrl=""
 function App() {
   getCurrentUser();
   getSuggestedUsers();
@@ -33,7 +33,7 @@ function App() {
     const dispatch=useDispatch();
   useEffect(()=>{
     if(userData){
-      const socketIo=io(`${serverUrl}`,{
+      const socketIo=io({
         query:{
           userId:userData._id
         }
@@ -55,6 +55,7 @@ function App() {
   },[userData])
  
   return (
+    <BrowserRouter>
     <Routes>
       <Route
         path="/signup"
@@ -100,7 +101,7 @@ function App() {
 
 
     </Routes>
-    
+    </BrowserRouter>
   );
 }
 export default App;

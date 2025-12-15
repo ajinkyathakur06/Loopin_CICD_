@@ -96,11 +96,11 @@ app.get("/health", (req, res) => {
 /* =========================
    API ROUTES
 ========================= */
-app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
-app.use("/api/post", postRouter);
-app.use("/api/loop", loopRouter);
-app.use("/api/message", messageRouter);
+app.use("/auth", authRouter);
+app.use("/user", userRouter);
+app.use("/post", postRouter);
+app.use("/loop", loopRouter);
+app.use("/message", messageRouter);
 
 /* =========================
    ROOT ROUTE
