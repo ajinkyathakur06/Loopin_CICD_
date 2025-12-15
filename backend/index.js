@@ -71,7 +71,7 @@ const port = process.env.PORT || 5000;
 ========================= */
 app.use(
   cors({
-    origin: ["https://loopin.imcc-projects.in"], // frontend domain
+    origin: ["https://loopin.imcc.com"], // frontend domain
     credentials: true,
   })
 );

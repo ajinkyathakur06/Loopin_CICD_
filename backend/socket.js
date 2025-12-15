@@ -63,7 +63,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://loopin.imcc-projects.in"],
+    origin: ["https://loopin.imcc.com"],
     methods: ["GET", "POST"],
     credentials: true,
   },
