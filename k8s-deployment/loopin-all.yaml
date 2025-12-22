@@ -127,14 +127,25 @@ metadata:
   namespace: "2401193"
   annotations:
     kubernetes.io/ingress.class: rke2-nginx
+
+    # 🔑 REQUIRED
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+
+    # 🔑 WebSocket support
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/connection-proxy-header: "keep-alive"
+
 spec:
   ingressClassName: rke2-nginx
   rules:
     - host: loopin.imcc.com
       http:
         paths:
-          - path: /api
-            pathType: Prefix
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: mern-backend-service
