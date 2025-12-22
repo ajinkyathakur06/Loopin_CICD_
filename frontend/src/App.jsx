@@ -13,11 +13,11 @@ import Upload from "./pages/Upload.jsx";
 import Messages from "./pages/Messages.jsx";
 import MessageArea from "./pages/MessageArea.jsx";
 
-import getCurrentUser from "./hooks/getCurrentUser.jsx";
-import getSuggestedUsers from "./hooks/getSuggestedUsers.jsx";
-import getAllPost from "./hooks/getAllPost.jsx";
-import getFollowingList from "./hooks/getFollowingList.jsx";
-import getPrevChatUsers from "./hooks/getPrevchatUsers.jsx";
+import useCurrentUser from "./hooks/useCurrentUser.jsx";
+import useSuggestedUsers from "./hooks/useSuggestedUsers.jsx";
+import useAllPost from "./hooks/useAllPost.jsx";
+import useFollowingList from "./hooks/useFollowingList.jsx";
+import usePrevChatUsers from "./hooks/usePrevchatUsers.jsx";
 
 import { setOnlineUsers, setSocket } from "./redux/socketSlice.js";
 
@@ -33,13 +33,11 @@ function App() {
   const { socket } = useSelector((state) => state.socket);
 
   // ✅ Load initial data
-  useEffect(() => {
-  getCurrentUser();
-  getSuggestedUsers();
-  getAllPost();
-  getFollowingList();
-  getPrevChatUsers();
-}, []);
+  useCurrentUser();
+  useSuggestedUsers();
+  useAllPost();
+  useFollowingList();
+  usePrevChatUsers();
 
 
   // ✅ Socket connection
