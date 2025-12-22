@@ -24,18 +24,52 @@ spec:
           env:
             - name: PORT
               value: "5002"
+
+            - name: NODE_ENV
+              value: "production"
+
             - name: MONGODB_URL
               valueFrom:
                 secretKeyRef:
                   name: backend-secret
                   key: MONGODB_URL
+
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: backend-secret
                   key: JWT_SECRET
-            - name: NODE_ENV
-              value: "production"
+
+            - name: CLOUDINARY_CLOUD_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: CLOUDINARY_CLOUD_NAME
+
+            - name: CLOUDINARY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: CLOUDINARY_API_KEY
+
+            - name: CLOUDINARY_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: CLOUDINARY_API_SECRET
+
+            - name: EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: EMAIL
+
+            - name: EMAIL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: EMAIL_PASS
+
 ---
 apiVersion: v1
 kind: Service
@@ -95,14 +129,6 @@ metadata:
     kubernetes.io/ingress.class: rke2-nginx
 spec:
   ingressClassName: rke2-nginx
-
-  # 👇 FRONTEND AS DEFAULT BACKEND
-  defaultBackend:
-    service:
-      name: mern-frontend-service
-      port:
-        number: 80
-
   rules:
     - host: loopin.imcc.com
       http:
@@ -114,3 +140,11 @@ spec:
                 name: mern-backend-service
                 port:
                   number: 5002
+
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mern-frontend-service
+                port:
+                  number: 80
