@@ -67,15 +67,16 @@ spec:
 
         stage('Build Frontend Docker Image') {
             steps {
-                container('dind') {
-                    sh '''
-                        echo "Building frontend Docker image..."
-                        docker build -build-arg VITE_API_URL=https://loopin.imcc.com/api -t loopin-frontend:latest ./frontend
-                        docker image ls
-                    '''
-                }
+                sh '''
+                    echo "Building frontend Docker image..."
+                    docker build \
+                    --build-arg VITE_API_URL=https://loopin.imcc.com/api \
+                    -t loopin-frontend:latest \
+                    ./frontend
+                '''
             }
         }
+
 
         stage('SonarQube Analysis') {
             steps {
