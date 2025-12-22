@@ -67,13 +67,15 @@ spec:
 
         stage('Build Frontend Docker Image') {
             steps {
-                sh '''
-                    echo "Building frontend Docker image..."
-                    docker build \
-                    --build-arg VITE_API_URL=https://loopin.imcc.com/api \
-                    -t loopin-frontend:latest \
-                    ./frontend
-                '''
+                container('dind') {
+                    sh '''
+                        echo "Building frontend Docker image..."
+                        docker build \
+                        --build-arg VITE_API_URL=https://loopin.imcc.com/api \
+                        -t loopin-frontend:latest \
+                        ./frontend
+                    '''
+                }
             }
         }
 
