@@ -23,7 +23,9 @@ import { setOnlineUsers, setSocket } from "./redux/socketSlice.js";
 
 // ✅ Backend URL
 // export const serverUrl = "http://localhost:5000"; 
-export const serverUrl = "https://loopin.imcc.com";
+//export const serverUrl = "https://loopin.imcc.com";
+export const serverUrl = import.meta.env.VITE_API_URL;
+
 
 function App() {
   const dispatch = useDispatch();
@@ -31,35 +33,41 @@ function App() {
   const { socket } = useSelector((state) => state.socket);
 
   // ✅ Load initial data
+  useEffect(() => {
   getCurrentUser();
   getSuggestedUsers();
   getAllPost();
   getFollowingList();
   getPrevChatUsers();
+}, []);
+
 
   // ✅ Socket connection
   useEffect(() => {
-    if (userData) {
-      const socketIo = io(serverUrl, {
-        query: { userId: userData._id },
-        transports: ["websocket"],
-      });
+  if (userData) {
+    const socketIo = io("https://loopin.imcc.com", {
+      path: "/api/socket.io",
+      withCredentials: true,
+      query: { userId: userData._id },
+      transports: ["websocket"],
+    });
 
-      dispatch(setSocket(socketIo));
+    dispatch(setSocket(socketIo));
 
-      socketIo.on("getOnlineUsers", (users) => {
-        dispatch(setOnlineUsers(users));
-        console.log("Online Users:", users);
-      });
+    socketIo.on("getOnlineUsers", (users) => {
+      dispatch(setOnlineUsers(users));
+      console.log("Online Users:", users);
+    });
 
-      return () => socketIo.close();
-    } else {
-      if (socket) {
-        socket.close();
-        dispatch(setSocket(null));
-      }
+    return () => socketIo.disconnect();
+  } else {
+    if (socket) {
+      socket.disconnect();
+      dispatch(setSocket(null));
     }
+  }
   }, [userData]);
+
 
   return (
 
