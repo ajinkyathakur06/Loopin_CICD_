@@ -136,11 +136,14 @@ metadata:
 
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - loopin.imcc.com
+      secretName: loopin-tls
   rules:
     - host: loopin.imcc.com
       http:
         paths:
-          # 🔹 BACKEND
           - path: /api
             pathType: Prefix
             backend:
@@ -148,8 +151,6 @@ spec:
                 name: mern-backend-service
                 port:
                   number: 5002
-
-          # 🔹 FRONTEND
           - path: /
             pathType: Prefix
             backend:
