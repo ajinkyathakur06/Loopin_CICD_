@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import api from "../utils/axios.js";
 
 import { serverUrl } from "../App.jsx";
 import { setPostData } from "../redux/postSlice.js";
@@ -12,11 +12,14 @@ export default function useAllPost() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const result = await axios.get(
-          `${serverUrl}/api/post/getAll`,
+        const result = await api.get(
+          `/api/post/getAll`,
           { withCredentials: true }
         );
-        dispatch(setPostData(result.data));
+        dispatch(
+            setPostData(Array.isArray(result.data) ? result.data : [])
+        );
+
       } catch (error) {
         console.error("getAllPost error:", error);
       }

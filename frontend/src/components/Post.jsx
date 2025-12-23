@@ -13,7 +13,7 @@ import { FaRegBookmark } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa6";
 import { IoSendSharp } from "react-icons/io5";
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import api from "../utils/axios";
 import { serverUrl } from '../App.jsx';
 import { setLoopData } from '../redux/loopSlice.js';
 // Importing backend server URL from App.jsx (to hit API routes)
@@ -41,7 +41,7 @@ function Post({post}) {
     const handleLike=async()=>{
         try{
             // API call to like/unlike the post
-            const result=await axios.get(`${serverUrl}/api/post/like/${post._id}`,{withCredentials:true})
+            const result=await api.get(`/api/post/like/${post._id}`,{withCredentials:true})
             // Update the post data in Redux store (if needed)
             const updatedPost=result.data;
             // You can dispatch an action to update the post in the Redux store here
@@ -55,7 +55,7 @@ function Post({post}) {
 const handleComment=async()=>{
         try{
             // API call to comment on the post
-            const result=await axios.post(`${serverUrl}/api/post/comment/${post._id}`,{message},{withCredentials:true})
+            const result=await api.post(`/api/post/comment/${post._id}`,{message},{withCredentials:true})
             // Update the post data in Redux store (if needed)
             const updatedPost=result.data;
             // You can dispatch an action to update the post in the Redux store here
@@ -70,7 +70,7 @@ const handleComment=async()=>{
     const handleSaved=async()=>{
         try{
             // API call to like/unlike the post
-            const result=await axios.get(`${serverUrl}/api/post/saved/${post._id}`,{withCredentials:true})
+            const result=await api.get(`/api/post/saved/${post._id}`,{withCredentials:true})
             dispatch(setUserData(result.data))
            
         }catch(error){

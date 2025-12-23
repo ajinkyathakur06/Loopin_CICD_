@@ -3,7 +3,7 @@ import { serverUrl } from "../App";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData,setFollowing } from "../redux/userSlice";   
 import { useEffect } from "react";
-import axios from "axios";
+import api from "../utils/axios.js";
 
 
 export default function useCurrentUser() {
@@ -12,11 +12,11 @@ export default function useCurrentUser() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const result = await axios.get(
-          `${serverUrl}/api/user/current`,
+        const result = await api.get(
+          `/api/user/current`,
           { withCredentials: true }
         );
-        dispatch(setUserData(result.data));
+        dispatch(setUserData(Array.isArray(result.data) ? result.data : []));
       } catch (error) {
         console.log(error);
       }

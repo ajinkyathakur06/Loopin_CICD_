@@ -1,6 +1,3 @@
-
-
-
 // export default LeftHome;
 import React from 'react';
 // Importing React library
@@ -23,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
 // Importing the action to set/reset user data from userSlice (Redux slice)
 
-import axios from 'axios';
+import api from '../utils/axios.js';
 // For making API requests
 
 import { serverUrl } from "../App.jsx";
@@ -44,7 +41,7 @@ function LeftHome() {
     const handleLogOut = async () => {
         try {
             // API call to backend to log out the user (clears session/cookies)
-            const result = await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true });
+            const result = await api.get(`/api/auth/signout`, { withCredentials: true });
             
             // After successful logout, clear user data from Redux store
             dispatch(setUserData(null));
@@ -108,10 +105,8 @@ function LeftHome() {
                 <h1 className='text-[white] text-[15px]'>Suggested Users</h1>
                 {/* Title for suggested users */}
                 
-                {suggestedUsers && suggestedUsers.slice(0,3).map((user,index) => (
-                    // Show only first 3 suggested users
-                    <OtherUser key={index} user={user}/>
-                    // Each user is rendered using the OtherUser component
+                {Array.isArray(suggestedUsers) && suggestedUsers.slice(0, 3).map((user) => (
+                    <OtherUser key={user._id} user={user} />
                 ))}
             </div> 
         </div>

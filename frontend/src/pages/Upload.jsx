@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaSquarePlus } from "react-icons/fa6";
 import { useState } from "react"; 
 import VideoPlayer from "../components/VideoPlayer";
-import axios from "axios";
+import api from "../utils/axios.js";
 import { serverUrl } from "../App.jsx";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -53,7 +53,7 @@ const uploadPost=async()=>{
     formData.append("mediaType",mediaType);
     formData.append("media",backendMedia);
     
-    const result=await axios.post(`${serverUrl}/api/post/upload`,formData,{withCredentials:true})
+    const result=await api.post(`/api/post/upload`,formData,{withCredentials:true})
     dispatch(setPostData([...postData,result.data]));
      alert("Post uploaded successfully!");
       setLoading(false);
@@ -69,7 +69,7 @@ const uploadLoop= async () => {
     formData.append("caption", caption);
     formData.append("media", backendMedia);
 
-    const result = await axios.post(`${serverUrl}/api/loop/upload`, formData, {
+    const result = await api.post(`/api/loop/upload`, formData, {
       withCredentials: true})
        dispatch(setLoopData([result.data,...loopData]));
     // console.log("Loop upload success:", result);

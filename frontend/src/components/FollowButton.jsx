@@ -1,8 +1,8 @@
 import React, { use } from 'react';
 import {useDispatch,useSelector} from 'react-redux';
-import axios from 'axios';
 import { serverUrl } from '../App.jsx';
 import { toggleFollow,setFollowing } from '../redux/userSlice.js';
+import api from '../utils/axios.js';
 // Importing backend server URL from App.jsx (to hit API routes)
 
 function FollowButton({targetUserId,tailwind,onFollowChange}  ) {
@@ -11,7 +11,7 @@ function FollowButton({targetUserId,tailwind,onFollowChange}  ) {
   const dispatch=useDispatch()
   const handleFollow=async()=>{
     try{
-      const result=await axios.get(`${serverUrl}/api/user/follow/${targetUserId}`,{withCredentials:true})
+      const result=await api.get(`/api/user/follow/${targetUserId}`,{withCredentials:true})
       if(onFollowChange){
         onFollowChange()
       }

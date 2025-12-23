@@ -8,7 +8,7 @@ function OnlineUser({user}){
     const navigate=useNavigate();
     const dispatch=useDispatch();
     return(
-        <div className="W-[50px] H-[50px] flex gap-[20px]
+        <div className="W-[50px] h-[50px] flex gap-[20px]
          justify-start items-center relative">
             <div className='w-[40px] h-[40px] border-2 border-black
             rounded-full cursor-pointer overflow-hidden'

@@ -5,7 +5,7 @@ import { IoArrowBackOutline, IoSend } from "react-icons/io5";
 import { FaRegImage } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import dp1 from '../assets/dp1.jpg';
-import axios from 'axios';
+import api from '../utils/axios.js';
 import { serverUrl } from "../App.jsx";
 
 import SenderMessage from '../components/SenderMessage';
@@ -44,8 +44,8 @@ function MessageArea() {
       formData.append("message", input);
       if (backendImage) formData.append("image", backendImage);
 
-      const result = await axios.post(
-        `${serverUrl}/api/message/send/${selectedUser._id}`,
+      const result = await api.post(
+        `/api/message/send/${selectedUser._id}`,
         formData,
         {
           withCredentials: true,
@@ -66,8 +66,8 @@ function MessageArea() {
   // 📌 Get old messages
   const getAllMessages = async () => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/message/getAll/${selectedUser._id}`,
+      const result = await api.get(
+        `/api/message/getAll/${selectedUser._id}`,
         { withCredentials: true }
       );
 

@@ -1,5 +1,5 @@
 
-import axios from "axios";
+import api from "../utils/axios.js";
 import { serverUrl } from "../App.jsx";
 import React, { useState } from "react";
 import { ClipLoader } from "react-spinners";
@@ -48,8 +48,8 @@ function ForgotPassword() {
     setLoading(true);
 
     try {
-      const result = await axios.post(
-        `${serverUrl}/api/auth/sendOtp`,
+      const result = await api.post(
+        `/api/auth/sendOtp`,
         { email },
         { withCredentials: true }
       );
@@ -74,8 +74,8 @@ function ForgotPassword() {
     setLoading(true);
 
     try {
-      const result = await axios.post(
-        `${serverUrl}/api/auth/verifyOtp`,
+      const result = await api.post(
+        `/api/auth/verifyOtp`,
         { email, otp },
         { withCredentials: true }
       );
@@ -116,8 +116,8 @@ function ForgotPassword() {
     setLoading(true);
 
     try {
-      const result = await axios.post(
-        `${serverUrl}/api/auth/resetPassword`,
+      const result = await api.post(
+        `/api/auth/resetPassword`,
         { email, password: newPassword },
         { withCredentials: true }
       );

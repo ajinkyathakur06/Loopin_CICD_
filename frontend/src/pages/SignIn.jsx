@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import logo from "../assets/logo1.png";
 import logo2 from "../assets/logo2.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import axios from "axios";
+import api from "../utils/axios.js";
 import { serverUrl } from "../App.jsx";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
@@ -71,8 +71,8 @@ function SignIn() {
     setErrors({ ...errors, apiError: "" });
 
     try {
-      const result = await axios.post(
-        `${serverUrl}/api/auth/signin`,
+      const result = await api.post(
+        `/api/auth/signin`,
         { userName, password },
         { withCredentials: true }
       );

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import dp1 from "../assets/dp1.jpg";
 import { setProfileData, setUserData } from "../redux/userSlice";
 import { ClipLoader } from "react-spinners";
-import axios from "axios";
+import api from "../utils/axios.js";
 import { serverUrl } from "../App.jsx";
 
 function EditProfile() {
@@ -45,7 +45,7 @@ function EditProfile() {
       if(backendImage){
         formdata.append("profileImage",backendImage)
       }
-      const result = await axios.post(`${serverUrl}/api/user/editProfile`,formdata,{withCredentials:true});
+      const result = await api.post(`/api/user/editProfile`,formdata,{withCredentials:true});
       dispatch(setProfileData(result.data))
       dispatch(setUserData(result.data))
       setLoading(false)

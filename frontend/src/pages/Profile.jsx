@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileData, setUserData } from "../redux/userSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/axios.js";
 import { serverUrl } from "../App.jsx";
 import { IoArrowBackOutline } from "react-icons/io5";
 import dp1 from "../assets/dp.jpg";
@@ -24,8 +24,8 @@ function Profile() {
 
   const handleProfile = async () => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/user/getProfile/${userName}`,
+      const result = await api.get(
+        `/api/user/getProfile/${userName}`,
         { withCredentials: true }
       );
       dispatch(setProfileData(result.data));
@@ -37,7 +37,7 @@ function Profile() {
   const handleLogOut = async () => {
     try {
       // API call to backend to log out the user (clears session/cookies)
-      const result = await axios.get(`${serverUrl}/api/auth/signout`, {
+      const result = await api.get(`/api/auth/signout`, {
         withCredentials: true,
       });
 

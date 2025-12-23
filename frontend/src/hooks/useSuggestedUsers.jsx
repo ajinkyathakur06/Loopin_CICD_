@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import api from "../utils/axios.js";
 
 import { serverUrl } from "../App.jsx";
 import { setSuggestedUsers } from "../redux/userSlice.js";
@@ -12,12 +12,12 @@ export default function useSuggestedUsers() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const result = await axios.get(
-          `${serverUrl}/api/user/suggested`,
+        const result = await api.get(
+          `/api/user/suggested`,
           { withCredentials: true }
         );
 
-        dispatch(setSuggestedUsers(result.data));
+        dispatch(setSuggestedUsers(Array.isArray(result.data) ? result.data : []));
       } catch (error) {
         console.error("useSuggestedUsers error:", error);
       }
