@@ -135,7 +135,7 @@ spec:
                             sh '''
                                 echo "Applying MERN Kubernetes deployment..."
                                 kubectl apply -f loopin-all.yaml
-                                kubectl apply -f lts-ingress.yaml
+                                kubectl apply -f lts-secret.yaml
 
                                 kubectl rollout restart deployment/loopin-backend-deployment
                             '''
