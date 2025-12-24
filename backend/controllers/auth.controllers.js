@@ -5,6 +5,7 @@ import sendMail from "../config/Mail.js"
 
 export const signUp = async (req, res) => {
   try {
+    const isProd = process.env.NODE_ENV === "production";
     const { name, email, password, userName } = req.body;
     const findByEmail = await User.findOne({ email });
     console.log("Email query result:", findByEmail);
@@ -33,8 +34,8 @@ export const signUp = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-      secure: true,
-      sameSite: "None",
+      secure: isProd,
+      sameSite: isProd ? "None" : "Lax",
     });
 
     // Remove password before sending response
@@ -85,8 +86,8 @@ export const signIn = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-      secure: true,
-      sameSite: "None",
+      secure: isProd,
+      sameSite: isProd ? "None" : "Lax",
     });
 
     // 🔍 Debug: Sending response
@@ -108,8 +109,8 @@ export const signOut = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      secure: true,
-      sameSite: "None",
+      secure: isProd,
+      sameSite: isProd ? "None" : "Lax",
       path: "/",
     });//deleting the cookie so that user will be signout
     return res.status(200).json({ message: "sign out successfully !" });

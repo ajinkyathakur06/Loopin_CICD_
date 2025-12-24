@@ -70,6 +70,9 @@ spec:
                   name: backend-secret
                   key: EMAIL_PASS
 
+            - name: NODE_ENV
+              value: "production"
+
 ---
 apiVersion: v1
 kind: Service
