@@ -42,8 +42,9 @@ function App() {
 
   // ✅ Socket connection
   useEffect(() => {
-  if (userData) {
-    const socketIo = io("https://loopin.imcc.com", {
+    if (!userData?._id ||socket) return; // 🔥 CRITICAL GUARD
+
+    const socketIo = io(import.meta.env.VITE_API_URL, {
       path: "/api/socket.io",
       withCredentials: true,
       query: { userId: userData._id },
@@ -54,17 +55,11 @@ function App() {
 
     socketIo.on("getOnlineUsers", (users) => {
       dispatch(setOnlineUsers(users));
-      console.log("Online Users:", users);
     });
 
     return () => socketIo.disconnect();
-  } else {
-    if (socket) {
-      socket.disconnect();
-      dispatch(setSocket(null));
-    }
-  }
-  }, [userData]);
+  }, [userData?._id]); // 🔥 depend ONLY on _id
+
 
 
   return (
