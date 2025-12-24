@@ -34,7 +34,7 @@ export const signUp = async (req, res) => {
       httpOnly: true,
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
       secure: true,
-      sameSite: None,
+      sameSite: "None",
     });
 
     // Remove password before sending response
@@ -46,37 +46,7 @@ export const signUp = async (req, res) => {
     return res.status(500).json({ message: `signup error ${error}` });
   }
 };
-// export const signIn = async (req, res) => {
-//   try {
-//     const { password, userName } = req.body;
 
-//     const user = await User.findOne({ userName }).select("+password");
-//     if (!user) {
-//       return res.status(400).json({ message: "User not found !" });
-//     }
-
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) {
-//       return res.status(400).json({ message: "Incorrect Password !" });
-//     }
-
-//     const token = await genToken(user._id);
-//     res.cookie("token", token, {
-//       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-//       secure: false,
-//       sameSite: "Strict",
-//     });
-//     //  ;user.password = undefined;
-
-//     // Remove password before sending response
-//     const userWithoutPassword = user.toObject();
-//     delete userWithoutPassword.password;
-
-//     return res.status(200).json(userWithoutPassword); ///user in brackets (changed code)
-//   } catch (error) {
-//     return res.status(500).json({ message: `signIn error ${error}` });
-//   }
-// };
 
 export const signIn = async (req, res) => {
   try {
@@ -136,7 +106,12 @@ export const signIn = async (req, res) => {
 
 export const signOut = async (req, res) => {
   try {
-    res.clearCookie("token"); //deleting the cookie so that user will be signout
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
+    });//deleting the cookie so that user will be signout
     return res.status(200).json({ message: "sign out successfully !" });
   } catch (error) {
     return res.status(500).json({ message: `signOut error ${error}` });
@@ -190,25 +165,7 @@ export const verifyOtp=async(req,res)=>{
 }
 }
 
-// step3 => resetting the new password
-// export const resetPassword=async(req,res)=>{
-//   try{
-//     const{email,password}=req.body
-//     const user=await User.findOne({email})
-//     if(!user || !user.isOtpVerified){
-//       return res.status(400).json({message:"otp verification required"})
-//     }
-//     const hashedPassword=await bcrypt.hash(password,10)
-//     user.password=hashedPassword
-//     user.isOtpVerified=false
-//     await user.save()
-  
-//     return res.status(500).json({message:"password reset successfully"})
-  
-//   }catch{error}{
-//     return res.status(200).json({message:`reset otp error ${error} `})
-//   }
-//   }
+
 export const resetPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
